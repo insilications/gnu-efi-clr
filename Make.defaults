@@ -46,15 +46,15 @@ TOPDIR := $(shell if [ "$$PWD" != "" ]; then echo $$PWD; else pwd; fi)
 # lib and include under the root
 #
 INSTALLROOT  := /
-PREFIX       := /usr/local
-LIBDIR 	     := $(PREFIX)/lib
+PREFIX       := /usr
+LIBDIR 	     := $(PREFIX)/lib64
 INSTALL	     := install
 
 # Compilation tools
 HOSTCC       := $(prefix)gcc
 CC           := $(prefix)$(CROSS_COMPILE)gcc
 AS           := $(prefix)$(CROSS_COMPILE)as
-LD           := $(prefix)$(CROSS_COMPILE)ld
+LD           := $(prefix)$(CROSS_COMPILE)ld.bfd
 AR           := $(prefix)$(CROSS_COMPILE)ar
 RANLIB       := $(prefix)$(CROSS_COMPILE)ranlib
 OBJCOPY      := $(prefix)$(CROSS_COMPILE)objcopy
