@@ -86,11 +86,28 @@ clean:
 			$(MAKE) -C $(OBJDIR)/$$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d clean; \
 		fi; \
 	done
+	rm -f gnu-efi.pc
 
-install:
+install: gnu-efi.pc
 	@for d in $(SUBDIRS); do \
 		mkdir -p $(OBJDIR)/$$d; \
 		$(MAKE) -C $(OBJDIR)/$$d -f $(SRCDIR)/$$d/Makefile SRCDIR=$(SRCDIR)/$$d install; done
+
+	mkdir -p $(INSTALLROOT)$(LIBDIR)/pkgconfig
+	$(INSTALL) -m 644 gnu-efi.pc $(INSTALLROOT)$(LIBDIR)/pkgconfig/
+
+gnu-efi.pc:
+	$(file > gnu-efi.pc,prefix=$(PREFIX))
+	$(file >> gnu-efi.pc,includedir=$(PREFIX)/include/efi)
+	$(file >> gnu-efi.pc,libdir=$(LIBDIR))
+	$(file >> gnu-efi.pc,CRT0=$(LIBDIR)/crt0-efi-$(ARCH).o)
+	$(file >> gnu-efi.pc,LDSCRIPT=$(LIBDIR)/elf_$(ARCH)_efi.lds)
+	$(file >> gnu-efi.pc,)
+	$(file >> gnu-efi.pc,Name: gnu-efi)
+	$(file >> gnu-efi.pc,Description: Develop EFI applications using the GNU toolchain and the EFI development environment.)
+	$(file >> gnu-efi.pc,Version: $(VERSION))
+	$(file >> gnu-efi.pc,Cflags: -I$(PREFIX)/include/efi -I$(PREFIX)/include/efi/protocol -I$(PREFIX)/include/efi/$(ARCH))
+	$(file >> gnu-efi.pc,Libs: -L$(LIBDIR) -lgnuefi -lefi)
 
 .PHONY:	$(SUBDIRS) clean depend
 
